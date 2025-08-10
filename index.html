@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Miko Fashion Accessory & Bag Stylist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Montserrat&display=swap');
+  :root {
+    --color-bg: #F8F1E9;
+    --color-primary: #1A2A44;
+    --color-accent: #D4A373;
+    --color-light: #EDE7DE;
+    --color-text: #333333;
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Montserrat', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    margin: 0;
+    padding: 0;
+    color: var(--color-text);
+  }
+
+  .page-header {
+    background-color: var(--color-primary);
+    padding: 60px 20px 40px;
+    text-align: center;
+    max-width: 100%;
+    font-family: var(--font-sans);
+    border-bottom: 1px solid #ddd;
+  }
+
+  .page-header h1 {
+    font-family: var(--font-serif);
+    font-size: 40px;
+    margin-bottom: 20px;
+    color: #ffffff;
+  }
+
+  .page-header p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #ffffff;
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .page-section {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: auto;
+    font-size: 16px;
+    line-height: 1.8;
+    font-family: var(--font-sans);
+    color: var(--color-text);
+  }
+  .page-section h2 {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    color: var(--color-primary);
+    margin-top: 40px;
+    margin-bottom: 12px;
+  }
+  .page-section ul {
+    padding-left: 22px;
+    margin-top: 10px;
+  }
+  .page-section li {
+    margin-bottom: 8px;
+  }
+
+  .page-section a {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-accent);
+  }
+  .page-section a:hover {
+    text-decoration: underline;
+  }
+
+  .page-footer {
+    text-align: center;
+    padding: 40px 20px 20px;
+    font-size: 14px;
+    color: var(--color-text);
+    font-family: var(--font-sans);
+  }
+  .page-footer a {
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+  .page-footer a:hover {
+    text-decoration: underline;
+  }
+
+  #styleAssistantBtn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(212, 163, 115, 0.4);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    animation: pulse 2s infinite;
+  }
+  #styleAssistantBtn:hover {
+    background: #b5895a;
+    transform: scale(1.05);
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  #styleAssistantPanel {
+    position: fixed;
+    top: 0;
+    right: -420px;
+    width: 400px;
+    max-height: 100vh;
+    background: white;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.12);
+    padding: 20px 30px;
+    box-sizing: border-box;
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 9999;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) var(--color-light);
+  }
+  #styleAssistantPanel::-webkit-scrollbar {
+    width: 8px;
+  }
+  #styleAssistantPanel::-webkit-scrollbar-track {
+    background: var(--color-light);
+  }
+  #styleAssistantPanel::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 4px;
+  }
+  #styleAssistantPanel.open {
+    right: 0;
+  }
+
+  #styleAssistantClose {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-accent);
+    cursor: pointer;
+    align-self: flex-end;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+
+  #styleAssistantPanel h2 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    margin: 0 0 15px;
+    font-size: 28px;
+    color: var(--color-primary);
+  }
+
+  #welcomeMessage {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--color-primary);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  #progressBar {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  .progress-dot {
+    width: 40px;
+    height: 40px;
+    background: var(--color-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    transition: background 0.3s, color 0.3s;
+  }
+  .progress-dot.active {
+    background: var(--color-accent);
+    color: white;
+  }
+
+  .question {
+    margin-bottom: 24px;
+  }
+  .question label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: var(--color-primary);
+  }
+
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .option-btn {
+    background: #fbfbfb;
+    border: 1.5px solid var(--color-accent);
+    border-radius: 25px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-accent);
+    user-select: none;
+    transition: all 0.3s ease;
+    flex: 1 1 calc(50% - 10px);
+    text-align: center;
+  }
+  .option-btn:hover {
+    background: #e0d8cd;
+  }
+  .option-btn.selected {
+    background: var(--color-accent);
+    color: white;
+  }
+
+  #nextBtn, #resetBtn, #addAllToCartBtn {
+    background: var(--color-accent);
+    border: none;
+    border-radius: 30px;
+    color: white;
+    padding: 14px 30px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(212, 163, 115, 0.4);
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+  }
+  #nextBtn:hover, #resetBtn:hover, #addAllToCartBtn:hover {
+    background: #b5895a;
+  }
+
+  #outfitResults {
+    display: none;
+    flex-direction: column;
+    font-family: var(--font-sans);
+    color: var(--color-primary);
+    margin-bottom: 20px;
+  }
+  #outfitResults.show {
+    display: flex;
+  }
+  #productsContainer {
+    margin-bottom: 20px;
+  }
+  .product-card {
+    display: flex;
+    gap: 15px;
+    border: 1.5px solid var(--color-light);
+    border-radius: 12px;
+    padding: 12px;
+    align-items: center;
+    background: var(--color-bg);
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+  }
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .product-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .product-info {
+    flex-grow: 1;
+  }
+  .product-name {
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 0 6px 0;
+  }
+  .product-price {
+    font-weight: 600;
+    color: var(--color-accent);
+    font-size: 14px;
+    margin: 0;
+  }
+  .product-link, .add-to-cart-btn {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-accent);
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 5px;
+  }
+  .add-to-cart-btn {
+    background: var(--color-accent);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    text-align: center;
+  }
+  .product-link:hover {
+    text-decoration: underline;
+    color: #b5895a;
+  }
+  .add-to-cart-btn:hover {
+    background: #b5895a;
+    text-decoration: none;
+  }
+  .size-select {
+    margin-top: 8px;
+    padding: 8px;
+    border: 1.5px solid var(--color-accent);
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--color-primary);
+    background: var(--color-light);
+    width: 100%;
+    max-width: 150px;
+  }
+  .size-select:focus {
+    outline: none;
+    border-color: #b5895a;
+  }
+
+  #sizeErrorMessage {
+    color: #c0392b;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+    min-height: 1.2em;
+  }
+
+  #loadingState {
+    display: none;
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-primary);
+    margin: 20px 0;
+  }
+  #loadingState.show {
+    display: block;
+  }
+
+  @media (max-width: 440px) {
+    #styleAssistantPanel {
+      width: 100vw;
+      right: -100vw;
+    }
+    #styleAssistantPanel.open {
+      right: 0;
+    }
+    #styleAssistantBtn {
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      font-size: 14px;
+    }
+    .product-card img {
+      width: 80px;
+      height: 80px;
+    }
+    .progress-dot {
+      font-size: 1.2rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <header class="page-header">
+    <h1>Miko Fashion Interactive Stylist Widget – Engagement & Experience Upgrade</h1>
+    <p>
+      The Miko Fashion Stylist Widget is a slide-in panel that turns static browsing into an interactive, guided styling experience. 
+      It instantly recommends curated bag-and-accessory combinations from Miko’s collections, tailored to the shopper’s style preferences and occasion.
+    </p>
+    <p>__________________</p>
+    <p style="font-size:18px; font-weight:700; background:#ffffff30; padding:12px; border-radius:8px; display:inline-block;">
+      Designed for Miko’s brand aesthetic, the widget creates a more engaging journey and increases the likelihood of cross-selling and upselling.
+    </p>
+</header>
+
+<section class="page-section">
+    <h2>What This Widget Does</h2>
+    <ul>
+      <li><strong>Engages users instantly</strong> with a simple, on-site style quiz instead of passive scrolling.</li>
+      <li><strong>Showcases Miko’s collections</strong> (Oak, CROCO, Buttons, etc.) in themed combinations.</li>
+      <li><strong>Encourages discovery</strong> of products shoppers might miss through standard browsing.</li>
+      <li><strong>Boosts basket value</strong> by suggesting complementary items.</li>
+    </ul>
+
+    <h2>Why It Matters for Miko Fashion</h2>
+    <p>
+      Today’s online shoppers expect personalization. By adding an interactive stylist, Miko can:
+    </p>
+    <ul>
+      <li>Increase time spent on site through a gamified shopping experience.</li>
+      <li>Deliver a premium, concierge-like service that reflects brand positioning.</li>
+      <li>Guide customers toward complete looks, increasing conversion rates.</li>
+      <li>Collect valuable insights into shopper preferences and style trends.</li>
+    </ul>
+
+    <h3>Before & After Experience</h3>
+    <table style="width:100%; border-collapse:collapse; margin-top:16px;">
+      <thead>
+        <tr style="background:#f2e8df;">
+          <th style="padding:10px; border:1px solid #ccc;">Current Experience</th>
+          <th style="padding:10px; border:1px solid #ccc;">With Miko Stylist Widget</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:10px; border:1px solid #ccc;">Static product grid</td>
+          <td style="padding:10px; border:1px solid #ccc;">Dynamic, style-driven recommendations</td>
+        </tr>
+        <tr>
+          <td style="padding:10px; border:1px solid #ccc;">User must search and filter manually</td>
+          <td style="padding:10px; border:1px solid #ccc;">Instant personalized combinations</td>
+        </tr>
+        <tr>
+          <td style="padding:10px; border:1px solid #ccc;">Single-item focus</td>
+          <td style="padding:10px; border:1px solid #ccc;">Encourages multi-item purchases</td>
+        </tr>
+        <tr>
+          <td style="padding:10px; border:1px solid #ccc;">Limited emotional connection</td>
+          <td style="padding:10px; border:1px solid #ccc;">Interactive, brand-immersive journey</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Integration on mikofashion.hr</h2>
+    <p>
+      The widget appears as a discreet “Stylist” button in the bottom corner of the page. When clicked, it opens a slide-in panel guiding the shopper through a few quick style questions, then instantly presenting a curated pairing from Miko’s collections — all without leaving the current page.
+    </p>
+
+    <p><strong>Outcome:</strong> A richer, more personal user experience that increases engagement, encourages cross-selling, and strengthens Miko Fashion’s premium brand identity.</p>
+
+    <p>👉 Contact me via <a href="https://www.linkedin.com/in/petar-skrbic/" target="_blank" rel="noopener">LinkedIn</a> or via email <b>notoolsnocraft@gmail.com</b> to learn more about integrating this widget into your shopping experience.</p>
+</section>
+
+<footer class="page-footer">
+    <p>© 2025 Petar Škrbić. All rights reserved.</p>
+</footer>
+
+
+
+
+
+
+
+
+
+  <button id="styleAssistantBtn" aria-label="Open Stylist">💡 Stylist</button>
+
+  <aside id="styleAssistantPanel" aria-hidden="true" aria-label="Accessory and Bag Stylist">
+    <div id="styleAssistantClose" role="button" tabindex="0" aria-label="Close Stylist">&times;</div>
+
+    <h2>Your Personal Stylist</h2>
+    <p id="welcomeMessage">Find your perfect bag and accessory combo in seconds! Answer three questions to get a curated look from Miko Fashion.</p>
+
+    <div id="progressBar">
+      <span class="progress-dot active">1</span>
+      <span class="progress-dot">2</span>
+      <span class="progress-dot">3</span>
+    </div>
+
+    <form id="styleForm" aria-live="polite">
+      <section id="question0" class="question" data-question="occasion">
+        <label>For which occasion?</label>
+        <div class="options">
+          <div class="option-btn" tabindex="0" data-value="Everyday">Everyday</div>
+          <div class="option-btn" tabindex="0" data-value="Work">Work</div>
+          <div class="option-btn" tabindex="0" data-value="Gift">Gift</div>
+        </div>
+      </section>
+
+      <section id="question1" class="question" data-question="style" hidden>
+        <label>Choose your style mood:</label>
+        <div class="options">
+          <div class="option-btn" tabindex="0" data-value="Minimalist">Minimalist</div>
+          <div class="option-btn" tabindex="0" data-value="Playful">Playful</div>
+          <div class="option-btn" tabindex="0" data-value="Elegant">Elegant</div>
+        </div>
+      </section>
+
+      <section id="question2" class="question" data-question="color" hidden>
+        <label>Pick your color tone:</label>
+        <div class="options">
+          <div class="option-btn" tabindex="0" data-value="Neutral">Neutral</div>
+          <div class="option-btn" tabindex="0" data-value="Warm">Warm</div>
+          <div class="option-btn" tabindex="0" data-value="Bold">Bold</div>
+        </div>
+      </section>
+
+      <button type="button" id="nextBtn" aria-label="Next">Next</button>
+      <div id="errorMessage" role="alert" aria-live="assertive" style="color: #c0392b; font-size: 14px; margin-top: 10px; min-height: 1.2em;"></div>
+    </form>
+
+    <div id="loadingState">Loading your recommendations...</div>
+
+    <section id="outfitResults" aria-live="polite" aria-atomic="true">
+      <h3>Your Curated Look</h3>
+      <p style="font-size: 14px; margin-bottom: 20px;">Add both items to your cart for a complete Miko Fashion style!</p>
+      <div id="productsContainer"></div>
+      <button id="addAllToCartBtn" aria-label="Add all to cart">Add All to Cart</button>
+      <div id="sizeErrorMessage" role="alert" aria-live="assertive"></div>
+      <button id="resetBtn" aria-label="Start Over">🔄 Start Over</button>
+    </section>
+  </aside>
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+  (function() {
+    const btnOpen = document.getElementById('styleAssistantBtn');
+    const panel = document.getElementById('styleAssistantPanel');
+    const btnClose = document.getElementById('styleAssistantClose');
+    const form = document.getElementById('styleForm');
+    const nextBtn = document.getElementById('nextBtn');
+    const outfitResults = document.getElementById('outfitResults');
+    const productsContainer = document.getElementById('productsContainer');
+    const resetBtn = document.getElementById('resetBtn');
+    const addAllToCartBtn = document.getElementById('addAllToCartBtn');
+    const loadingState = document.getElementById('loadingState');
+    const sizeErrorMessage = document.getElementById('sizeErrorMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const progressDots = document.querySelectorAll('.progress-dot');
+
+    let currentStep = 1;
+    const totalSteps = 3;
+    const answers = {};
+
+    const productSets = {
+      "Everyday|Minimalist|Neutral": [
+        { name: "Basic Black Backpack", price: "99,99 €", img: "https://mikofashion.hr/wp-content/uploads/2025/05/Basic_black_backpack_1.jpg", link: "https://mikofashion.hr/en/proizvod/basic-backpack-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Scarf – Indigo", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/Marama_Indigo_1-1.jpg", link: "https://mikofashion.hr/en/proizvod/scarf-rose-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Earrings – Mary in love", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/nausnice-mary-in-love_1.jpg", link: "https://mikofashion.hr/en/proizvod/earrings-marija-and-duka-kopiraj/", sizes: ["One Size"], collection: "Oak" }
+    ],
+      "Everyday|Playful|Bold": [
+        { name: "Basic Black Backpack", price: "99,99 €", img: "https://mikofashion.hr/wp-content/uploads/2025/05/Basic_black_backpack_1.jpg", link: "https://mikofashion.hr/en/proizvod/basic-backpack-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Scarf – Indigo", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/Marama_Indigo_1-1.jpg", link: "https://mikofashion.hr/en/proizvod/scarf-rose-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Earrings – Mary in love", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/nausnice-mary-in-love_1.jpg", link: "https://mikofashion.hr/en/proizvod/earrings-marija-and-duka-kopiraj/", sizes: ["One Size"], collection: "Oak" }
+    ],
+      "Work|Elegant|Neutral": [
+        { name: "Basic Black Backpack", price: "99,99 €", img: "https://mikofashion.hr/wp-content/uploads/2025/05/Basic_black_backpack_1.jpg", link: "https://mikofashion.hr/en/proizvod/basic-backpack-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Scarf – Indigo", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/Marama_Indigo_1-1.jpg", link: "https://mikofashion.hr/en/proizvod/scarf-rose-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Earrings – Mary in love", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/nausnice-mary-in-love_1.jpg", link: "https://mikofashion.hr/en/proizvod/earrings-marija-and-duka-kopiraj/", sizes: ["One Size"], collection: "Oak" }
+    ],
+      "Work|Minimalist|Neutral": [
+        { name: "Basic Black Backpack", price: "99,99 €", img: "https://mikofashion.hr/wp-content/uploads/2025/05/Basic_black_backpack_1.jpg", link: "https://mikofashion.hr/en/proizvod/basic-backpack-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Scarf – Indigo", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/Marama_Indigo_1-1.jpg", link: "https://mikofashion.hr/en/proizvod/scarf-rose-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Earrings – Mary in love", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/nausnice-mary-in-love_1.jpg", link: "https://mikofashion.hr/en/proizvod/earrings-marija-and-duka-kopiraj/", sizes: ["One Size"], collection: "Oak" }
+    ],
+      "Gift|Elegant|Warm": [
+        { name: "Basic Black Backpack", price: "99,99 €", img: "https://mikofashion.hr/wp-content/uploads/2025/05/Basic_black_backpack_1.jpg", link: "https://mikofashion.hr/en/proizvod/basic-backpack-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Scarf – Indigo", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/Marama_Indigo_1-1.jpg", link: "https://mikofashion.hr/en/proizvod/scarf-rose-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Earrings – Mary in love", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/nausnice-mary-in-love_1.jpg", link: "https://mikofashion.hr/en/proizvod/earrings-marija-and-duka-kopiraj/", sizes: ["One Size"], collection: "Oak" }
+    ],
+      "Gift|Playful|Bold": [
+        { name: "Basic Black Backpack", price: "99,99 €", img: "https://mikofashion.hr/wp-content/uploads/2025/05/Basic_black_backpack_1.jpg", link: "https://mikofashion.hr/en/proizvod/basic-backpack-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Scarf – Indigo", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/Marama_Indigo_1-1.jpg", link: "https://mikofashion.hr/en/proizvod/scarf-rose-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Earrings – Mary in love", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/nausnice-mary-in-love_1.jpg", link: "https://mikofashion.hr/en/proizvod/earrings-marija-and-duka-kopiraj/", sizes: ["One Size"], collection: "Oak" }
+    ],
+    };
+
+    const defaultProducts = [
+      { name: "Basic Black Backpack", price: "99,99 €", img: "https://mikofashion.hr/wp-content/uploads/2025/05/Basic_black_backpack_1.jpg", link: "https://mikofashion.hr/en/proizvod/basic-backpack-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Scarf – Indigo", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/Marama_Indigo_1-1.jpg", link: "https://mikofashion.hr/en/proizvod/scarf-rose-kopiraj/", sizes: ["One Size"], collection: "Oak" },
+        { name: "Earrings – Mary in love", price: "23,99 €", img: "https://mikofashion.hr/wp-content/uploads/2024/07/nausnice-mary-in-love_1.jpg", link: "https://mikofashion.hr/en/proizvod/earrings-marija-and-duka-kopiraj/", sizes: ["One Size"], collection: "Oak" }
+    ];
+
+    btnOpen.addEventListener('click', () => {
+      panel.classList.add('open');
+      panel.setAttribute('aria-hidden', 'false');
+      document.getElementById('styleForm').querySelector('.option-btn').focus();
+      panel.scrollTop = 0;
+    });
+
+    btnClose.addEventListener('click', () => {
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden', 'true');
+      btnOpen.focus();
+    });
+    btnClose.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        btnClose.click();
+      }
+    });
+
+    form.querySelectorAll('.options').forEach(optionsContainer => {
+      optionsContainer.addEventListener('click', e => {
+        if (!e.target.classList.contains('option-btn')) return;
+        optionsContainer.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+        e.target.classList.add('selected');
+        errorMessage.textContent = '';
+        nextBtn.focus();
+      });
+    });
+
+    form.querySelectorAll('.options').forEach(optionsContainer => {
+      optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            btn.click();
+          }
+        });
+      });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const questionEl = form.querySelector(`[data-question]:not([hidden])`);
+      if (!questionEl) return;
+
+      const selectedOption = questionEl.querySelector('.option-btn.selected');
+      if (!selectedOption) {
+        errorMessage.textContent = 'Please select an option to continue.';
+        return;
+      } else {
+        errorMessage.textContent = '';
+      }
+
+      const questionName = questionEl.getAttribute('data-question');
+      answers[questionName] = selectedOption.getAttribute('data-value');
+
+      if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+      } else {
+        showResults();
+      }
+    });
+
+    function showStep(step) {
+      form.querySelectorAll('[data-question]').forEach(el => el.hidden = true);
+      form.querySelector(`[data-question="${getQuestionName(step)}"]`).hidden = false;
+
+      progressDots.forEach((dot, index) => {
+        dot.classList.toggle('active', index < step);
+      });
+
+      if (step === totalSteps) {
+        nextBtn.textContent = 'Show Recommendations';
+      } else {
+        nextBtn.textContent = 'Next';
+      }
+      panel.scrollTop = 0;
+    }
+
+    function getQuestionName(step) {
+      switch(step) {
+        case 1: return 'occasion';
+        case 2: return 'style';
+        case 3: return 'color';
+        default: return null;
+      }
+    }
+
+    function resetAnswers() {
+      Object.keys(answers).forEach(k => delete answers[k]);
+      form.querySelectorAll('.option-btn.selected').forEach(btn => btn.classList.remove('selected'));
+      outfitResults.classList.remove('show');
+      loadingState.classList.remove('show');
+      productsContainer.innerHTML = '';
+      nextBtn.style.display = 'block';
+      addAllToCartBtn.style.display = 'none';
+      sizeErrorMessage.textContent = '';
+      errorMessage.textContent = '';
+      currentStep = 1;
+      showStep(currentStep);
+      const firstOption = form.querySelector('.option-btn');
+      if (firstOption) {
+        firstOption.focus();
+      }
+      panel.scrollTop = 0;
+    }
+
+    resetBtn.addEventListener('click', () => {
+      resetAnswers();
+    });
+
+    function showResults() {
+      nextBtn.style.display = 'none';
+      form.querySelectorAll('[data-question]').forEach(el => el.hidden = true);
+      loadingState.classList.add('show');
+
+      setTimeout(() => {
+        loadingState.classList.remove('show');
+        sizeErrorMessage.textContent = '';
+        const key = `${answers.occasion}|${answers.style}|${answers.color}`;
+        const products = productSets[key] || defaultProducts;
+
+        productsContainer.innerHTML = '';
+        products.forEach((prod, index) => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          const sizeOptions = prod.sizes.map(size => `<option value="${size}">${size}</option>`).join('');
+          card.innerHTML = `
+            <img src="${prod.img}" alt="${prod.name}">
+            <div class="product-info">
+              <p class="product-name">${prod.name}</p>
+              <p class="product-price">${prod.price}</p>
+              ${prod.sizes.length > 1 ? `<select class="size-select" data-product-id="${index}" aria-label="Select size for ${prod.name}">
+                <option value="">Select size</option>
+                ${sizeOptions}
+              </select>` : ''}
+              <a class="product-link" href="${prod.link}" target="_blank" rel="noopener">View Product</a>
+              <button class="add-to-cart-btn" data-product-id="${index}" aria-label="Add ${prod.name} to cart">Add to Cart</button>
+            </div>
+          `;
+          productsContainer.appendChild(card);
+        });
+
+        productsContainer.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const productId = btn.getAttribute('data-product-id');
+            const sizeSelect = productsContainer.querySelector(`.size-select[data-product-id="${productId}"]`);
+            const selectedSize = sizeSelect ? sizeSelect.value : products[productId].sizes[0];
+
+            if (sizeSelect && !selectedSize) {
+              sizeErrorMessage.textContent = `Please select a size for ${products[productId].name}.`;
+              return;
+            }
+
+            alert(`Adding to cart: ${products[productId].name} ${selectedSize ? `(Size: ${selectedSize})` : ''}`);
+          });
+        });
+
+        outfitResults.classList.add('show');
+        addAllToCartBtn.style.display = 'block';
+        panel.scrollTop = 0;
+      }, 1000);
+    }
+
+    addAllToCartBtn.addEventListener('click', () => {
+      const key = `${answers.occasion}|${answers.style}|${answers.color}`;
+      const products = productSets[key] || defaultProducts;
+      const sizeSelects = productsContainer.querySelectorAll('.size-select');
+      const selectedSizes = Array.from(sizeSelects).map((select, index) => ({
+        product: products[index].name,
+        size: select ? select.value : products[index].sizes[0]
+      }));
+
+      const missingSizes = selectedSizes.filter(item => !item.size);
+      if (missingSizes.length > 0) {
+        sizeErrorMessage.textContent = `Please select a size for: ${missingSizes.map(item => item.product).join(', ')}.`;
+        return;
+      }
+
+      alert(`Adding to cart: ${selectedSizes.map(item => `${item.product} (Size: ${item.size})`).join(', ')}`);
+    });
+  })();
+  </script>
+</body>
+</html>
